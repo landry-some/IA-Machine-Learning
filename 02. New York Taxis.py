@@ -28,6 +28,8 @@ df = df[df['duration_minutes'] > 0]
 df['fare_per_mile'] = np.where(df['trip_distance'] > 0, df['total_amount'] / df['trip_distance'], np.nan)
 df['fare_per_minute'] = np.where(df['duration_minutes'] > 0, df['total_amount'] / df['duration_minutes'], np.nan)
 
+df.dropna(inplace=True)
+
 fare_per_mile_max = 100
 fare_per_minute_max = 15
 
