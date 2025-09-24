@@ -10,9 +10,9 @@ df = df[['passenger_count', 'trip_distance', 'RatecodeID', 'PULocationID', 'DOLo
 
 df['passenger_count'] = df['passenger_count'].fillna(1)
 df.loc[df['passenger_count'] == 0, 'passenger_count'] = 1
-df = df[~df['passenger_count'].isin([5, 6, 7, 8, 9])]
+df = df[df['passenger_count'] <= 5]
 
 df['RatecodeID'] = df['RatecodeID'].fillna(99)
-df['Airport_fee'] = df['Airport_fee'].fillna(df['Airport_fee'].mean().round(2))
+df['Airport_fee'] = df['Airport_fee'].fillna(0)
 
 print(df)
