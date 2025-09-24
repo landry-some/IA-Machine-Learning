@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 
 df = pd.read_parquet('taxis.parquet') #pip install pyarrow para ler parquet
 
@@ -30,9 +31,16 @@ df['fare_per_minute'] = np.where(df['duration_minutes'] > 0, df['total_amount'] 
 
 df.dropna(inplace=True)
 
-fare_per_mile_max = 100
-fare_per_minute_max = 15
+fare_per_mile_max = 50
+fare_per_minute_max = 10
 
 df = df[~((df['fare_per_mile'] > fare_per_mile_max) | (df['fare_per_minute'] > fare_per_minute_max))]
 
-print(df)
+df.plot.scatter('total_amount', 'trip_distance', 3)
+plt.title('Valor da Corrida x Distância')
+
+plt.hist(df['payment_type'], bins=[0,1,2,3,4,5,6], density=True, color="pink")
+ax = plt.gca()
+ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+plt.xlabel('Tipo de Pagamento')
+plt.ylabel('Quantidade de Corridas')
