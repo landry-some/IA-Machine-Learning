@@ -32,6 +32,8 @@ df['fare_per_minute'] = np.where(df['duration_minutes'] > 0, df['total_amount'] 
 df['avg_speed_mph'] = df['trip_distance'] / (df['duration_minutes'] / 60)
 df = df[(df['avg_speed_mph'] >= 2) & (df['avg_speed_mph'] <= 60)]
 
+df = df[df['total_amount'] < 400]
+
 df.dropna(inplace=True)
 
 fare_per_mile_max = 50
@@ -63,7 +65,6 @@ plt.xlabel('Duração (min)')
 plt.ylabel('Quantidade de Corridas')
 plt.title('Distribuição das Durações das Corridas')
 plt.grid(True)
-plt.show()
 
 plt.hist(df['trip_distance'], bins=[0,5,10,15,20,25,30])
 plt.xlabel('Distância das Corridas')
@@ -73,6 +74,6 @@ plt.hist(df['total_amount'], bins=[0,25,50,100,150,200])
 plt.xlabel('Pagamento Total')
 plt.ylabel('Quantidade de Corridas')
 
-df.boxplot(column = ['total_amount', 'trip_distance', 'duration_minutes']).plot()
-plt.title('Notas de Críticos x Audiência')
-plt.ylabel('Quantidade de Filmes')
+df.boxplot(column = ['total_amount', 'duration_minutes'], whis=25)
+plt.title('Relação entre Pagamento e Duração')
+plt.ylabel('Quantidade de Corridas')
