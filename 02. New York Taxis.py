@@ -43,9 +43,17 @@ df = df[~((df['fare_per_mile'] > fare_per_mile_max) | (df['fare_per_minute'] > f
 
 df.plot.scatter('total_amount', 'trip_distance', 3)
 plt.title('Valor da Corrida x Distância')
+plt.xlabel('Pagamento Total')
+plt.ylabel('Distância (milhas)')
+plt.yticks([0, 10, 20, 30, 40, 50], ['0 mi', '10 mi', '20 mi', '30 mi', '40 mi', '50 mi'])
+plt.xticks([0, 50, 100, 150, 200, 250, 300, 350, 400], ['0$', '50$', '100$', '150$', '200$', '250$', '300$', '350$', '400$'])
 
-df.plot.scatter('total_amount', 'duration_minutes', 3)
+df.plot.scatter('total_amount', 'duration_minutes', 2)
 plt.title('Valor da Corrida x Duração')
+plt.xlabel('Pagamento Total')
+plt.ylabel('Duração (minutos)')
+plt.yticks([0, 30, 60, 120, 180, 240], ['0m', '30m', '60m', '120m', '180m', '240m'])
+plt.xticks([0, 50, 100, 150, 200, 250, 300, 350, 400], ['0$', '50$', '100$', '150$', '200$', '250$', '300$', '350$', '400$'])
 
 plt.scatter(df['trip_distance'], df['duration_minutes'], 3)
 plt.xlabel('Distância (milhas)')
