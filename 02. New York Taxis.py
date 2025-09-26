@@ -24,10 +24,13 @@ df = df[(df['trip_distance'] < 50) & (df['trip_distance'] > 1) & (df['congestion
         & (df['total_amount'] >= 0.0) & (df['Airport_fee'] >= 0.0) & (df['cbd_congestion_fee'] >= 0.0)]
 
 df['duration_minutes'] = (df['tpep_dropoff_datetime'] - df['tpep_pickup_datetime']).dt.total_seconds() / 60
-df = df[df['duration_minutes'] > 0]
+df = df[(df['duration_minutes'] > 0) & (df['duration_minutes'] <= 240)]
 
 df['fare_per_mile'] = np.where(df['trip_distance'] > 0, df['total_amount'] / df['trip_distance'], np.nan)
 df['fare_per_minute'] = np.where(df['duration_minutes'] > 0, df['total_amount'] / df['duration_minutes'], np.nan)
+
+df['avg_speed_mph'] = df['trip_distance'] / (df['duration_minutes'] / 60)
+df = df[(df['avg_speed_mph'] >= 2) & (df['avg_speed_mph'] <= 60)]
 
 df.dropna(inplace=True)
 
@@ -39,8 +42,37 @@ df = df[~((df['fare_per_mile'] > fare_per_mile_max) | (df['fare_per_minute'] > f
 df.plot.scatter('total_amount', 'trip_distance', 3)
 plt.title('Valor da Corrida x Distância')
 
-plt.hist(df['payment_type'], bins=[0,1,2,3,4,5,6], density=True, color="pink")
+df.plot.scatter('total_amount', 'duration_minutes', 3)
+plt.title('Valor da Corrida x Duração')
+
+plt.scatter(df['trip_distance'], df['duration_minutes'], 3)
+plt.xlabel('Distância (milhas)')
+plt.ylabel('Duração (minutos)')
+plt.title('Duração vs Distância das Corridas')
+plt.grid(True)
+plt.show()
+
+plt.hist(df['payment_type'], bins=[0,1,2,3,4,5,6], density=True)
 ax = plt.gca()
 ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
 plt.xlabel('Tipo de Pagamento')
 plt.ylabel('Quantidade de Corridas')
+
+plt.hist(df['duration_minutes'], bins=[0,20,40,60,70,80,90,100,120])
+plt.xlabel('Duração (min)')
+plt.ylabel('Quantidade de Corridas')
+plt.title('Distribuição das Durações das Corridas')
+plt.grid(True)
+plt.show()
+
+plt.hist(df['trip_distance'], bins=[0,5,10,15,20,25,30])
+plt.xlabel('Distância das Corridas')
+plt.ylabel('Quantidade de Corridas')
+
+plt.hist(df['total_amount'], bins=[0,25,50,100,150,200])
+plt.xlabel('Pagamento Total')
+plt.ylabel('Quantidade de Corridas')
+
+df.boxplot(column = ['total_amount', 'trip_distance', 'duration_minutes']).plot()
+plt.title('Notas de Críticos x Audiência')
+plt.ylabel('Quantidade de Filmes')
